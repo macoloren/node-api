@@ -1,6 +1,7 @@
 const express = require('express');
 
 const getAllUsers = (req, res) => {
+    throw new Error("eroor al obtener los usuarios")
     res.send("hola users")
 }
 
