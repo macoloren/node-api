@@ -1,11 +1,12 @@
 const express = require('express');
-const morgan =  require('morgan')
+const morgan = require('morgan')
 const swaggerUi = require('swagger-ui-express');
 const config = require("../../config")
-const logger = require('../logger/index')
+const logger = require('../logger/index');
+const { error } = require('winston');
 
 
-//inicialisa servidor de express 
+//inicialisa servidor de express
 class ExpressServer {
 
     constructor() {
@@ -17,8 +18,8 @@ class ExpressServer {
         this._status()
         this._swaggerConfig();
         this._routes();
-        
-        
+
+
         this._notfoud();
         this._errorHandler();
 
@@ -37,7 +38,7 @@ class ExpressServer {
     }
 
     //endpoit para monitoriar la api si esta viva, (online)
-    _status(){
+    _status() {
         this.app.head("/status", (req, res) => {
             res.status(200).end();
         });
@@ -56,6 +57,11 @@ class ExpressServer {
     _errorHandler() {
         this.app.use((err, req, res, next) => {
             const code = err.code || 500;
+
+            //info del error
+            logger.error(`${code} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+            logger.error(err.stack);
+
             res.status(code);
             const body = {
                 error: {
@@ -70,8 +76,8 @@ class ExpressServer {
     //documentacion Swagger
     _swaggerConfig() {
         this.app.use(
-            config.swager.path, 
-            swaggerUi.serve, 
+            config.swager.path,
+            swaggerUi.serve,
             swaggerUi.setup(require('../swagger/swagger.json')) //donde estara escrita la documentacion
         );
     };

@@ -8,6 +8,7 @@ const config = require('../../config/index')
         new winston.transports.Console(),
     )
 
+    //manejo de logs para ambiente de produccion
     const loggerInstance = winston.createLogger({
         level: config.log.level,
         format: winston.format.simple(),
