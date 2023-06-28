@@ -20,22 +20,18 @@
   ],
   "tags": [
     {
-      "name": "admins",
-      "description": "Secured Admin-only calls"
-    },
-    {
-      "name": "developers",
-      "description": "Operations available to regular developers"
+      "name": "users",
+      "description": "Operations about users"
     }
   ],
   "paths": {
-    "/inventory": {
+    "/users": {
       "get": {
         "tags": [
-          "developers"
+          "users"
         ],
-        "summary": "searches inventory",
-        "description": "By passing in the appropriate options, you can search for\navailable inventory in the system\n",
+        "summary": "Get a list all existing users",
+        "description": "",
         "operationId": "searchInventory",
         "parameters": [
           {
