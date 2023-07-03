@@ -40,7 +40,7 @@ class ExpressServer {
     //endpoit para monitoriar la api si esta viva, (online)
     _status() {
         this.app.head("/status", (req, res) => {
-            res.status(200).end();
+            res.status(200).json('Aplication Up');
         });
     };
 
@@ -66,7 +66,8 @@ class ExpressServer {
             const body = {
                 error: {
                     code,
-                    message: err.message
+                    message: err.message,
+                    detail: err.data
                 }
             };
             res.status(code).json(body)
