@@ -14,7 +14,7 @@ const userSchema = new Schema({
     },
     lastName: {
         type: String,
-        required: [true, 'Email is required'],
+        required: true,
         trim: true,
         maxlength: [50,"Last name is very long"],
         minlength: [3, "Last name is a very short"]
@@ -36,7 +36,7 @@ const userSchema = new Schema({
     //     required: [true, 'Password confirmation is required'],
     //     trim: true,
     // },
-    date: {
+    birthdate: {
         type: Date
     },
     role: {
@@ -53,7 +53,7 @@ const userSchema = new Schema({
 },
     {
         timestamps: true,
-        version: false
+        versionKey: false
     });
 
     //validando que el email sea unico
