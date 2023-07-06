@@ -12,7 +12,8 @@ class ExpressServer {
     constructor() {
         this.app = express();
         this.port = config.port
-        this.basePath = config.api.prefix
+        this.basePathUsers = config.api.prefix
+        this.basePathAut = config.api.prefix
 
         this._middlewares();
         this._status()
@@ -34,7 +35,8 @@ class ExpressServer {
 
     //inyectando las rutas a la api
     _routes() {
-        this.app.use(`${this.basePath}/users`, require('../../routes/users.routes'))
+        this.app.use(`${this.basePathUsers}/users`, require('../../routes/users.routes'))
+        this.app.use(`${this.basePathAut}/auth`, require('../../routes/auth.routes'))
     }
 
     //endpoit para monitoriar la api si esta viva, (online)
