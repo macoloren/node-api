@@ -1,123 +1,306 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "API Rest",
-    "description": "This is a API",
+    "title": "Users and products Api",
+    "description": "## This a api for users and products",
+    "version": "1.0.1",
     "contact": {
-      "email": "you@your-company.com"
-    },
-    "license": {
-      "name": "Apache 2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-    },
-    "version": "0.0.1"
+      "email": "lorenzanamarco74@gmail.com"
+    }
   },
+
   "servers": [
     {
-      "url": "https://localhost:3000/api/v1",
+      "url": "http://localhost:3000/api/v1",
       "description": "Desarrollo"
+    },
+    {
+      "url": "",
+      "description": "Producción"
     }
   ],
   "tags": [
     {
       "name": "users",
-      "description": "Operations about users"
+      "description": "Operations about users."
     }
   ],
   "paths": {
-    "/users": {
+    "/users/": {
       "get": {
-        "tags": [
-          "users"
-        ],
-        "summary": "Get a list all existing users",
-        "description": "",
-        "operationId": "searchInventory",
         "parameters": [
           {
-            "name": "searchString",
             "in": "query",
-            "description": "pass an optional search string for looking up inventory",
+            "name": "filter[name]",
+            "description": "filter users by name.",
             "required": false,
-            "style": "form",
-            "explode": true,
-            "schema": {
+            "Schema": {
               "type": "string"
             }
           },
           {
-            "name": "skip",
             "in": "query",
-            "description": "number of records to skip for pagination",
+            "name": "filter[lastName]",
+            "description": "filter users by last name.",
             "required": false,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "minimum": 0,
-              "type": "integer",
-              "format": "int32"
+            "Schema": {
+              "type": "string"
             }
           },
           {
-            "name": "limit",
             "in": "query",
-            "description": "maximum number of records to return",
+            "name": "filter[birthdate]",
+            "description": "filter users by birthdate.",
             "required": false,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "maximum": 50,
-              "minimum": 0,
-              "type": "integer",
-              "format": "int32"
+            "Schema": {
+              "type": "date"
+            }
+          },
+          {
+            "in": "query",
+            "name": "options[limit]",
+            "description": "The limit of users displayed (Use it for pagination).",
+            "required": false,
+            "Schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "options[offset]",
+            "description": "index to start the search of users (Use it for pagination).",
+            "required": false,
+            "Schema": {
+              "type": "string"
             }
           }
         ],
+        "tags": ["users"],
+        "summary": "Return a list of existing users",
+        "description": "# Service for retrieve users by parameters with pagination\n - For the pagination, you need send offset and limit parameters.",
         "responses": {
           "200": {
-            "description": "search results matching criteria",
+            "description": "A JSON Array of users.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/InventoryItem"
+                    "$ref": "#/components/schemas/User"
                   }
                 }
               }
             }
           },
-          "400": {
-            "description": "bad input parameter"
+          "500": {
+            "description": "Error message in JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/ErrorDB"
+                }
+              }
+            }
           }
         }
       },
       "post": {
-        "tags": [
-          "admins"
-        ],
-        "summary": "adds an inventory item",
-        "description": "Adds an item to the system",
-        "operationId": "addInventory",
+        "tags": ["users"],
+        "summary": "Create a new user.",
+        "description": "",
         "requestBody": {
-          "description": "Inventory item to add",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/InventoryItem"
+                "$ref": "#/components/schemas/UserCreateAndUpdate"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "item created"
+            "description": "User created."
           },
           "400": {
-            "description": "invalid input, object invalid"
+            "description": "Error message in JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/RequestError"
+                }
+              }
+            }
           },
-          "409": {
-            "description": "an existing item already exists"
+          "500": {
+            "description": "Error message in JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/ErrorDB"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": ["users"],
+        "summary": "Return a list of users providing an existing id.",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the user you want to see.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON Array of users.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error message in JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/RequestError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error message in JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/ErrorDB"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["users"],
+        "summary": "Update an existing user by providing the correct id.",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the user that needs to be updated.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCreateAndUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error message in JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/RequestError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error message in JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/ErrorDB"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["users"],
+        "summary": "Delete an existing user by providing the correct id.",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the user that needs to be deleted.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted."
+          },
+          "400": {
+            "description": "Error message in JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/RequestError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error message in JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/ErrorDB"
+                }
+              }
+            }
           }
         }
       }
@@ -125,52 +308,120 @@
   },
   "components": {
     "schemas": {
-      "InventoryItem": {
-        "required": [
-          "id",
-          "manufacturer",
-          "name",
-          "releaseDate"
-        ],
+      "User": {
+        "required": ["id"],
         "type": "object",
         "properties": {
-          "id": {
+          "role": {
+            "description": "the user role",
             "type": "string",
-            "format": "uuid",
-            "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+            "example": "Default value: USER_ROLE"
+          },
+          "enable": {
+            "description": "User is enabled?",
+            "type": "boolean",
+            "example": "true"
+          },
+          "_id": {
+            "description": "The user id.",
+            "type": "string",
+            "example": "25acd789def..."
           },
           "name": {
+            "description": "The user name.",
             "type": "string",
-            "example": "Widget Adapter"
+            "example": "Gastón"
           },
-          "releaseDate": {
+          "lastName": {
+            "description": "The user last name.",
             "type": "string",
-            "format": "date-time",
-            "example": "2016-08-29T09:12:33.001Z"
+            "example": "Martinez"
           },
-          "manufacturer": {
-            "$ref": "#/components/schemas/Manufacturer"
+          "email": {
+            "description": "The user email.",
+            "type": "string",
+            "example": "example@mail.com"
+          },
+          "password": {
+            "description": "The user password.",
+            "type": "string",
+            "example": "$2b$10$om4Aa5l2.QdSip87EdJM"
+          },
+          "birthdate": {
+            "description": "The user birthdate.",
+            "type": "date",
+            "example": "YY-MM-DD -> 1989-12-31"
+          },
+          "createdAt": {
+            "description": "date of the user creation.",
+            "type": "date",
+            "example": "YY-MM-DD -> 1989-12-31"
+          },
+          "updatedAt": {
+            "description": "date of the user update.",
+            "type": "date",
+            "example": "YY-MM-DD -> 1989-12-31"
           }
         }
       },
-      "Manufacturer": {
-        "required": [
-          "name"
-        ],
+      "UserCreateAndUpdate": {
+        "required": ["id"],
         "type": "object",
         "properties": {
           "name": {
+            "description": "The user name.",
             "type": "string",
-            "example": "ACME Corporation"
+            "example": "Gastón"
           },
-          "homePage": {
+          "lastName": {
+            "description": "The user last name.",
             "type": "string",
-            "format": "url",
-            "example": "https://www.acme-corp.com"
+            "example": "Martinez"
           },
-          "phone": {
+          "email": {
+            "description": "The user email.",
             "type": "string",
-            "example": "408-867-5309"
+            "example": "example@email.com"
+          },
+          "password": {
+            "description": "The user password.",
+            "type": "string",
+            "example": "Your password"
+          },
+          "birthdate": {
+            "description": "The user birthdate.",
+            "type": "date",
+            "example": "MM-DD-YYY -> 12/31/1989"
+          }
+        }
+      },
+      "RequestError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "Error code",
+            "type": "integer",
+            "example": "400"
+          },
+          "message": {
+            "description": "Error message",
+            "type": "string",
+            "example": "Validation Errors: Invalid id, invalid email, etc"
+          }
+        }
+      },
+      "ErrorDB": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "Error code",
+            "type": "integer",
+            "example": "500"
+          },
+          "message": {
+            "description": "Error message",
+            "type": "string",
+            "example": "Search failed: description of the error"
           }
         }
       }
